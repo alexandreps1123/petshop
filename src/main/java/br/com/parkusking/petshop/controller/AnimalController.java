@@ -1,7 +1,6 @@
 package br.com.parkusking.petshop.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,12 +28,12 @@ public class AnimalController {
 
     @GetMapping
     public List<Animal> listarTodos() {
-        return repository.findAll();
+        return (List<Animal>)repository.findAll();
     }
 
     @GetMapping(path = "/{cod_animal}")
-    public Optional<Animal> listarPorId(@PathVariable("cod_animal") Long codAnimal) {
-        return repository.findById(codAnimal);
+    public Animal listarPorId(@PathVariable("cod_animal") Long codAnimal) {
+        return repository.findById(codAnimal).orElse(null);
     }
 
     @PostMapping
@@ -44,7 +43,7 @@ public class AnimalController {
 
     @PutMapping("/{cod_cliente}")
     public Animal alterar(@RequestBody Animal animal){
-        return repository.saveAndFlush(animal);
+        return repository.save(animal);
     }
 
     @DeleteMapping("/{cod_animal}")

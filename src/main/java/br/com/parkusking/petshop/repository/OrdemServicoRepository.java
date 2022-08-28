@@ -1,11 +1,9 @@
 package br.com.parkusking.petshop.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
 
 import br.com.parkusking.petshop.model.OrdemServico;
 
-@Repository
-public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long>{
+public interface OrdemServicoRepository extends CrudRepository<OrdemServico, Long>{
     
 }

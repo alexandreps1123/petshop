@@ -28,12 +28,12 @@ public class OrdemServicoController {
 
     @GetMapping
     public List<OrdemServico> listarTodos() {
-        return repository.findAll();
+        return (List<OrdemServico>) repository.findAll();
     }
 
     @GetMapping(path = "/{cod_ordem_servico}")
-    public Optional<OrdemServico> listarPorId(@PathVariable("cod_ordem_servico") Long codOrdemServico) {
-        return repository.findById(codOrdemServico);
+    public OrdemServico listarPorId(@PathVariable("cod_ordem_servico") Long codOrdemServico) {
+        return repository.findById(codOrdemServico).orElse(null);
     }
 
     @PostMapping
@@ -42,15 +42,8 @@ public class OrdemServicoController {
     }
 
     @PutMapping("/{cod_ordem_servico}")
-    public OrdemServico alterar(@PathVariable("cod_ordem_servico") Long codOrdemServico, @RequestBody OrdemServico ordemServicoDetalhes){
-        OrdemServico ordemServicoAlterar = repository.findById(codOrdemServico)
-        .orElseThrow();
-
-        ordemServicoAlterar.setValor(ordemServicoDetalhes.getValor());
-        ordemServicoAlterar.setHoraEntrada(ordemServicoDetalhes.getHoraEntrada());
-        ordemServicoAlterar.setHoraRetirada(ordemServicoDetalhes.getHoraRetirada());
-
-        return repository.saveAndFlush(ordemServicoAlterar);
+    public OrdemServico alterar(@RequestBody OrdemServico ordemServico){
+        return repository.save(ordemServico);
     }
 
     @DeleteMapping("/{cod_ordem_servico}")

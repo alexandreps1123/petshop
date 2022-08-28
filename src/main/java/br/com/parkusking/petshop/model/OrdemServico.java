@@ -24,12 +24,12 @@ public class OrdemServico {
     @Column(name = "valor", nullable = false)
     private Double valor;
     
-    @Temporal(TemporalType.DATE)
-    @Column(name = "hora_entrada")
+    // @Temporal(TemporalType.DATE)
+    // @Column(name = "hora_entrada")
     private String horaEntrada;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "hora_retirada")
+    // @Temporal(TemporalType.DATE)
+    // @Column(name = "hora_retirada")
     private String horaRetirada;
 
 

@@ -30,7 +30,7 @@ public class Animal {
 
     // 
     @ManyToOne(fetch = FetchType.EAGER,  cascade={ })
-    @JoinColumn(name="codCliente")
+    @JoinColumn(name="cod_cliente")
     private Cliente cliente;
 
     public Animal() {
