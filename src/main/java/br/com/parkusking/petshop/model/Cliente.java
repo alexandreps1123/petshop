@@ -1,40 +1,45 @@
 package br.com.parkusking.petshop.model;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.Column;
 
-@Entity
-@Table(name="cliente")
+
+@Entity                     // indica que a classe eh armazenavel no banco
+@Table(name="cliente")      // explicita o nome da tabela no banco
 public class Cliente {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long codCliente;
+    @Id                     // Indica que o atributo eh PK da tabela
+    @GeneratedValue(strategy = GenerationType.AUTO) // representa o auto-incremnte no MySQL
+    @Column(name="cod_cliente") // nome da coluna na tabela
+    private Integer codCliente;
 
+    @Column(name="nome", length = 50, nullable = false)
     private String nome;
     
+    @Column(name="telefone", length = 20, nullable = true)
     private String telefone;
 
     public Cliente() {
     }
 
-    public Cliente(Long codCliente) {
+    public Cliente(Integer codCliente) {
         this.codCliente = codCliente;
     }
 
-    public Cliente(Long codCliente, String nome, String telefone) {
+    public Cliente(Integer codCliente, String nome, String telefone) {
         this.codCliente = codCliente;
         this.nome = nome;
         this.telefone = telefone;
     }
 
-    public Long getCodCliente() {
+    public Integer getCodCliente() {
         return codCliente;
     }
 
-    public void setCodCliente(Long codCliente) {
+    public void setCodCliente(Integer codCliente) {
         this.codCliente = codCliente;
     }
     
