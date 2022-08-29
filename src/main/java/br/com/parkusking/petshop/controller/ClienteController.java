@@ -2,6 +2,7 @@ package br.com.parkusking.petshop.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,43 +12,70 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.parkusking.petshop.dto.ClienteDTO;
 import br.com.parkusking.petshop.model.Cliente;
-import br.com.parkusking.petshop.repository.ClienteRepository;
-
-
+import br.com.parkusking.petshop.service.ClienteService;
 
 @RestController
 @RequestMapping("cliente")
 public class ClienteController {
 
-    private final ClienteRepository repository;
+    private final ClienteService service;
 
-    public ClienteController(ClienteRepository repository) {
-        this.repository = repository;
+    public ClienteController(ClienteService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public List<Cliente> listarTodos() {
-        return (List<Cliente>)repository.findAll();
+    public ResponseEntity<List<Cliente>> listarTodos() {
+        List<Cliente> res = service.listarTodos();
+        if(res != null)  {
+            return ResponseEntity.ok(res);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
-    @GetMapping(path = "/{cod_cliente}")
-    public Cliente listarPorId(@PathVariable("cod_cliente") Long codCliente) {
-        return repository.findById(codCliente).orElse(null);
+    @GetMapping("/dto")
+    public List<ClienteDTO> listarTodosDTO() {
+        List<ClienteDTO> res = service.listarTodosDTO();
+        
+        return res;        
+    }
+
+    @GetMapping("/{codCliente}")
+    public ResponseEntity<Cliente> listarPorId(@PathVariable Long codCliente) {
+        Cliente res = service.listarPorId(codCliente);
+        if(res != null)  {
+            return ResponseEntity.ok(res);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public Cliente salvar(@RequestBody Cliente cliente) {
-        return repository.save(cliente);
+    public ResponseEntity<Cliente> salvar(@RequestBody Cliente cliente) {
+        Cliente res = service.salvar(cliente);
+        if(res != null) {
+            return ResponseEntity.ok(res);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
-    @PutMapping("/{cod_cliente}")
-    public Cliente alterar(@RequestBody Cliente cliente){
-        return repository.save(cliente);
+    @PutMapping("/{codCliente}")
+    public ResponseEntity<Cliente> atualizar(@RequestBody Cliente cliente){
+        Cliente res = service.alterar(cliente);
+        if(res != null) {
+            return ResponseEntity.ok(res);
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{cod_cliente}")
-	public void remover(@PathVariable("cod_cliente") Long codCliente){
-		repository.deleteById(codCliente);
+    @DeleteMapping("/{codCliente}")
+	public ResponseEntity<Void> remover(@PathVariable Long codCliente){
+        if(!service.existeId(codCliente)) {
+            return ResponseEntity.notFound().build();
+        }
+        service.remover(codCliente);
+
+		return ResponseEntity.noContent().build();
 	}
 }

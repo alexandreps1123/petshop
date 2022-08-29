@@ -1,8 +1,8 @@
 package br.com.parkusking.petshop.controller;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,41 +13,63 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.parkusking.petshop.model.OrdemServico;
-import br.com.parkusking.petshop.repository.OrdemServicoRepository;
+import br.com.parkusking.petshop.service.OrdemServicoService;
 
 
 @RestController
-@RequestMapping("ordem_servico")
+@RequestMapping("ordemServico")
 public class OrdemServicoController {
 
-    private final OrdemServicoRepository repository;
+    private final OrdemServicoService service;
 
-    public OrdemServicoController(OrdemServicoRepository repository) {
-        this.repository = repository;
+    public OrdemServicoController(OrdemServicoService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public List<OrdemServico> listarTodos() {
-        return (List<OrdemServico>) repository.findAll();
+    public ResponseEntity<List<OrdemServico>> listarTodos() {
+        List<OrdemServico> res = service.listarTodos();
+        if(res != null)  {
+            return ResponseEntity.ok(res);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
-    @GetMapping(path = "/{cod_ordem_servico}")
-    public OrdemServico listarPorId(@PathVariable("cod_ordem_servico") Long codOrdemServico) {
-        return repository.findById(codOrdemServico).orElse(null);
+    @GetMapping("/{codOrdemServico}")
+    public ResponseEntity<OrdemServico> listarPorId(@PathVariable Long codOrdemServico) {
+        OrdemServico res = service.listarPorId(codOrdemServico);
+        if(res != null)  {
+            return ResponseEntity.ok(res);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public OrdemServico salvar(@RequestBody OrdemServico ordemServico) {
-        return repository.save(ordemServico);
+    public ResponseEntity<OrdemServico> salvar(@RequestBody OrdemServico ordemServico) {
+        OrdemServico res = service.salvar(ordemServico);
+        if(res != null) {
+            return ResponseEntity.ok(res);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
-    @PutMapping("/{cod_ordem_servico}")
-    public OrdemServico alterar(@RequestBody OrdemServico ordemServico){
-        return repository.save(ordemServico);
+    @PutMapping("/{codOrdemServico}")
+    public ResponseEntity<OrdemServico> atualizar(@RequestBody OrdemServico ordemServico){
+        OrdemServico res = service.alterar(ordemServico);
+        if(res != null) {
+            return ResponseEntity.ok(res);
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{cod_ordem_servico}")
-	public void remover(@PathVariable("cod_ordem_servico") Long codOrdemServico){
-		repository.deleteById(codOrdemServico);
+    @DeleteMapping("/{codOrdemServico}")
+	public ResponseEntity<Void> remover(@PathVariable Long codOrdemServico){
+        if(!service.existeId(codOrdemServico)) {
+            return ResponseEntity.notFound().build();
+        }
+        service.remover(codOrdemServico);
+
+		return ResponseEntity.noContent().build();
 	}
+
 }

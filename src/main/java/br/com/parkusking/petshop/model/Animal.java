@@ -3,7 +3,7 @@ package br.com.parkusking.petshop.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.FetchType;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,7 +15,7 @@ import javax.persistence.ManyToOne;
 public class Animal {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="cod_animal")
     private Long codAnimal;
     
@@ -23,25 +23,16 @@ public class Animal {
     private String nome;
     
     @Column(name="idade")
-    private Integer idade;
+    private Double idade;
     
     @Column(name="peso")
     private Double peso;
-
-    // 
-    @ManyToOne(fetch = FetchType.EAGER,  cascade={ })
+    
+    @ManyToOne
     @JoinColumn(name="cod_cliente")
     private Cliente cliente;
 
-    public Animal() {
-    }
-
-    public Animal(String nome, Integer idade, Double peso, Cliente cliente) {
-        this.nome = nome;
-        this.idade = idade;
-        this.peso = peso;
-        this.cliente = cliente;
-    }
+    public Animal() { }
 
     public Long getCodAnimal() {
         return codAnimal;
@@ -59,11 +50,11 @@ public class Animal {
         this.nome = nome;
     }
 
-    public Integer getIdade() {
+    public Double getIdade() {
         return idade;
     }
 
-    public void setIdade(Integer idade) {
+    public void setIdade(Double idade) {
         this.idade = idade;
     }
 
